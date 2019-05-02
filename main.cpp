@@ -5,7 +5,7 @@
 int main()
 {
     std::cout << "MES Start v0.7\n";
-    Grid grid("/home/marcin/qtProjects/MES/MES/config.txt");
+    Grid grid("../mes2/config.txt");
     grid.printData();
     grid.printGrid();
     grid.printElemUniwersalny();
