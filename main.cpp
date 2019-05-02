@@ -1,14 +1,14 @@
 #include <iostream>
-#include <Eigen/Dense>
 
 #include "grid.h"
 
-using Eigen::MatrixXd;
-
 int main()
 {
-    Grid grid("config.txt");
+    std::cout << "MES Start v0.7\n";
+    Grid grid("/home/marcin/qtProjects/MES/MES/config.txt");
     grid.printData();
     grid.printGrid();
+    grid.printElemUniwersalny();
+    grid.printGlobalH();
     return 0;
 }

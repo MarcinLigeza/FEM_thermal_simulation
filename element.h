@@ -12,6 +12,8 @@ public:
 
     int getNodeIndex(int index);
     void print(int id);
+
+    std::array<std::array<double, 4>, 4> He;
 };
 
 #endif // ELEMENT_H
