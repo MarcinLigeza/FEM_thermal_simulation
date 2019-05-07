@@ -14,6 +14,9 @@ public:
     void print(int id);
 
     std::array<std::array<double, 4>, 4> He;
+    std::array<std::array<double, 4>, 4> Ce;
+
+    std::array<int, 4> isBound;
 };
 
 #endif // ELEMENT_H

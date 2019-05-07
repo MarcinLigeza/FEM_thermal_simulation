@@ -14,6 +14,16 @@ Element::Element(int id1, int id2, int id3, int id4)
     nodesIDs[1] = id2;
     nodesIDs[2] = id3;
     nodesIDs[3] = id4;
+
+   for(int i = 0; i < 4; i++)
+   {
+       for (int j = 0; j < 4; j++)
+       {
+           He[i][j] = 0.0;
+           Ce[i][j] = 0.0;
+       }
+   }
+   isBound.fill(0);
 }
 
 int Element::getNodeIndex(int index)

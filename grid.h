@@ -13,6 +13,7 @@ struct ElementUniwersalny {
     std::array<std::array<double, 4>, 4> funKsztaltu;
     std::array<std::array<double, 4>, 4> pochodnepoKsi;
     std::array<std::array<double, 4>, 4> pochodnepoEta;
+    std::vector<double> detJ;
 };
 
 const double wspolrzedna = 1/sqrt(3);
@@ -23,7 +24,15 @@ class Grid
     void setElementUniwersalny();
     void setPochodnePoKsi();
     void calkowanieH();
-    void agregateH();
+    void calkowanieC();
+    void agregateH_C();
+
+    void calc_BC();
+
+    void calc_H_Matrix();
+
+    void calc_P_Vector();
+
 
     std::vector<Element> elements;
     std::vector<Node> nodes;
@@ -33,9 +42,23 @@ class Grid
     int numberOfNodes;
     double H;
     double L;
-    double K = 25.0;
+
+    const double K = 25.0;
+    const double INIT_TEMP = 100.0;
+    const int SIM_TIME = 500;
+    const int SIM_STEP = 50;
+    const double AMBIENT_TEMP = 1200;
+    const double ALFA = 300;
+    const double SPECIFIC_HEAT = 700;
+    const double DENSITY = 7800;
+
 
     double** Hg;
+    double** Cg;
+    double* P;
+
+    double** H_Matrix;
+    double* P_Vector;
 
 public:
     Grid(std::string fileName);
@@ -44,7 +67,10 @@ public:
     void printGrid();
     void printElemUniwersalny();
     void printGlobalH();
-
+    void printGlobalC();
+    void printGlobalP();
+    void printH_Matrix();
+    void printP_Vector();
 };
 
 #endif // GRID_H
