@@ -52,6 +52,7 @@ class Grid
     const double SPECIFIC_HEAT = 700;
     const double DENSITY = 7800;
 
+    int currentTime;
 
     double** Hg;
     double** Cg;
@@ -71,6 +72,9 @@ public:
     void printGlobalP();
     void printH_Matrix();
     void printP_Vector();
+    void printTemperatures();
+
+    bool iterate();
 };
 
 #endif // GRID_H

@@ -400,6 +400,78 @@ void Grid::calkowanieC()
     }
 }
 
+bool gauss(int n, double ** AB, double * X)
+{
+
+    const double eps = 1e-12;
+
+  int i,j,k;
+  double m,s;
+
+  // eliminacja współczynników
+
+  for(i = 0; i < n - 1; i++)
+  {
+    for(j = i + 1; j < n; j++)
+    {
+      if(fabs(AB[i][i]) < eps) return false;
+      m = -AB[j][i] / AB[i][i];
+      for(k = i + 1; k <= n; k++)
+        AB[j][k] += m * AB[i][k];
+    }
+  }
+
+  // wyliczanie niewiadomych
+
+  for(i = n - 1; i >= 0; i--)
+  {
+    s = AB[i][n];
+    for(j = n - 1; j >= i + 1; j--)
+      s -= AB[i][j] * X[j];
+    if(fabs(AB[i][i]) < eps) return false;
+    X[i] = s / AB[i][i];
+  }
+  return true;
+}
+
+bool Grid::iterate()
+{
+
+    double* temp1 = new double[numberOfNodes];
+    for(int i = 0; i < numberOfNodes; i++)
+        temp1[i] = 0.0;
+
+    double** H_P = new double*[numberOfNodes];
+    for(int i = 0; i < numberOfNodes; i++)
+    {
+        H_P[i] = new double[numberOfNodes+1];
+        for (int j = 0; j < numberOfNodes;j++)
+            H_P[i][j] = 0.0;
+    }
+
+    for(int i = 0; i < numberOfNodes; i++)
+    {
+        for(int j = 0; j < numberOfNodes; j++)
+        {
+            H_P[i][j] = H_Matrix[i][j];
+        }
+        H_P[i][numberOfNodes] = P_Vector[i];
+    }
+
+    currentTime += SIM_STEP;
+
+    gauss(numberOfNodes, H_P, temp1);
+
+    for(int i = 0; i < numberOfNodes; i++)
+    {
+        nodes[i].temp = temp1[i];
+    }
+
+}
+
+
+
+
 
 Grid::Grid(std::string fileName)
 {
@@ -419,6 +491,8 @@ Grid::Grid(std::string fileName)
 //        L = 0.1;
 //        nH = 4;
 //        nL = 4;
+
+        currentTime = 0;
 
         numberOfNodes = nH*nL;
         nodes.resize(numberOfNodes);
@@ -643,5 +717,19 @@ void Grid::printP_Vector()
     }
     std::cout << "\n";
 }
+
+void Grid::printTemperatures()
+{
+    std::cout << std::setprecision(6);
+    std::cout << "\nTemperatures after " << currentTime << " seconds \n";
+    for(int i = 0; i < numberOfNodes; i++)
+    {
+        std::cout << nodes[i].temp << "\t";
+        if((i+1)%nH == 0)
+            std::cout << "\n";
+    }
+    std::cout << "\n";
+}
+
 
 

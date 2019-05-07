@@ -14,5 +14,9 @@ int main()
     grid.printGlobalP();
     grid.printH_Matrix();
     grid.printP_Vector();
+    grid.printTemperatures();
+
+    grid.iterate();
+    grid.printTemperatures();
     return 0;
 }
