@@ -436,6 +436,8 @@ bool gauss(int n, double ** AB, double * X)
 
 bool Grid::iterate()
 {
+    calc_H_Matrix();
+    calc_P_Vector();
 
     double* temp1 = new double[numberOfNodes];
     for(int i = 0; i < numberOfNodes; i++)
@@ -466,6 +468,7 @@ bool Grid::iterate()
     {
         nodes[i].temp = temp1[i];
     }
+    printTemperatures();
 
 }
 
@@ -571,9 +574,6 @@ Grid::Grid(std::string fileName)
         agregateH_C();
 
         calc_BC();
-
-        calc_H_Matrix();
-        calc_P_Vector();
     }
 }
 

@@ -15,8 +15,7 @@ int main()
     grid.printH_Matrix();
     grid.printP_Vector();
     grid.printTemperatures();
-
-    grid.iterate();
-    grid.printTemperatures();
+    for(int i = 0; i < 50; i++)
+        grid.iterate();
     return 0;
 }
