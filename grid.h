@@ -85,6 +85,7 @@ public:
     void printTemperatures();
 
     bool iterate();
+    std::vector<std::vector<double>> getTemperatures();
 };
 
 #endif // GRID_H

@@ -102,16 +102,16 @@ void Grid::calkowanieH()
             }
         }
 
-        std::cout << "Element " << k << "\n";
-        for(int i = 0; i < 4; i++)
-        {
-            for (int l = 0; l < 4; l++)
-            {
-                std::cout << elements[k].He[i][l] << "\t";
-            }
-            std::cout << "\n";
-        }
-        std::cout << "###########################################\n";
+//        std::cout << "Element " << k << "\n";
+//        for(int i = 0; i < 4; i++)
+//        {
+//            for (int l = 0; l < 4; l++)
+//            {
+//                std::cout << elements[k].He[i][l] << "\t";
+//            }
+//            std::cout << "\n";
+//        }
+//        std::cout << "###########################################\n";
 
     }
 
@@ -135,16 +135,16 @@ void Grid::calkowanieC()
                 }
             }
         }
-        std::cout << "Element " << i << "\n";
-        for(int j = 0; j < 4; j++)
-        {
-            for (int l = 0; l < 4; l++)
-            {
-                std::cout << elements[i].Ce[j][l] << "\t";
-            }
-            std::cout << "\n";
-        }
-        std::cout << "###########################################\n";
+//        std::cout << "Element " << i << "\n";
+//        for(int j = 0; j < 4; j++)
+//        {
+//            for (int l = 0; l < 4; l++)
+//            {
+//                std::cout << elements[i].Ce[j][l] << "\t";
+//            }
+//            std::cout << "\n";
+//        }
+//        std::cout << "###########################################\n";
     }
 }
 
@@ -169,10 +169,8 @@ void Grid::calc_BC()
 {
     for(int i = 0; i < elements.size(); i++)
     {
-        std::cout << "Element " << i << ":\n";
         if(elements[i].isBound[0])
         {
-            std::cout << "Bound 0: \n";
             std::array<std::array<double,4>, 4> pc1;
             std::array<std::array<double,4>, 4> pc2;
             double detJ = abs(nodes[elements[i].getNodeIndex(0)].getX() - nodes[elements[i].getNodeIndex(1)].getX())/2.0;
@@ -225,7 +223,6 @@ void Grid::calc_BC()
         }
         if(elements[i].isBound[1])
         {
-            std::cout << "Bound 1: \n";
             std::array<std::array<double,4>, 4> pc1;
             std::array<std::array<double,4>, 4> pc2;
             double detJ = abs(nodes[elements[i].getNodeIndex(1)].getY() - nodes[elements[i].getNodeIndex(2)].getY())/2.0;
@@ -276,7 +273,6 @@ void Grid::calc_BC()
         }
         if(elements[i].isBound[2])
         {
-            std::cout << "Bound 2: \n";
             std::array<std::array<double,4>, 4> pc1;
             std::array<std::array<double,4>, 4> pc2;
             double detJ = abs(nodes[elements[i].getNodeIndex(2)].getX() - nodes[elements[i].getNodeIndex(3)].getX())/2.0;
@@ -327,7 +323,6 @@ void Grid::calc_BC()
         }
         if(elements[i].isBound[3])
         {
-            std::cout << "Bound 3: \n";
             std::array<std::array<double,4>, 4> pc1;
             std::array<std::array<double,4>, 4> pc2;
             double detJ = abs(nodes[elements[i].getNodeIndex(3)].getY() - nodes[elements[i].getNodeIndex(0)].getY())/2.0;
@@ -474,8 +469,24 @@ bool Grid::iterate()
 
 }
 
+std::vector<std::vector<double> > Grid::getTemperatures()
+{
+    std::vector<std::vector<double>> result;
+    result.resize(nL);
+    for (auto& i : result)
+    {
+        i.resize(nH);
+    }
 
-
+    for(int i = 0; i < nL; i++)
+    {
+        for(int j = 0; j < nH; j++)
+        {
+            result[i][j] = nodes[i].temp;
+        }
+    }
+    return result;
+}
 
 
 Grid::Grid(std::string fileName)
@@ -574,7 +585,7 @@ Grid::Grid(std::string fileName)
 
         calkowanieC();
         agregateH_C();
-        printGlobalH();
+//        printGlobalH();
 
         calc_BC();
     }
@@ -750,8 +761,6 @@ void Grid::printTemperatures()
             max = nodes[i].temp;
         if(nodes[i].temp < min)
             min = nodes[i].temp;
-
-
         std::cout << nodes[i].temp << "\t";
         if((i+1)%nH == 0)
             std::cout << "\n";
