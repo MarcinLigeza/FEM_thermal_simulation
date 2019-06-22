@@ -117,6 +117,38 @@ void Grid::calkowanieH()
 
 }
 
+
+void Grid::calkowanieC()
+{
+    //petla po elementach
+    for (int i = 0; i < elements.size(); i++)
+    {
+        //petla po punktach calkowania
+        for (int j = 0; j < 4; j++)
+        {
+            for (int k = 0; k < 4; k++)
+            {
+                for (int l = 0; l < 4; l++)
+                {
+                    elements[i].Ce[k][l] += elementUniwersalny.funKsztaltu[j][k] * elementUniwersalny.funKsztaltu[j][l]
+                            * DENSITY * SPECIFIC_HEAT * elementUniwersalny.detJ[j];
+                }
+            }
+        }
+        std::cout << "Element " << i << "\n";
+        for(int j = 0; j < 4; j++)
+        {
+            for (int l = 0; l < 4; l++)
+            {
+                std::cout << elements[i].Ce[j][l] << "\t";
+            }
+            std::cout << "\n";
+        }
+        std::cout << "###########################################\n";
+    }
+}
+
+
 void Grid::agregateH_C()
 {
     //petla po elementach
@@ -370,36 +402,6 @@ void Grid::calc_P_Vector()
     }
 }
 
-void Grid::calkowanieC()
-{
-    //petla po elementach
-    for (int i = 0; i < elements.size(); i++)
-    {
-        //petla po punktach calkowania
-        for (int j = 0; j < 4; j++)
-        {
-            for (int k = 0; k < 4; k++)
-            {
-                for (int l = 0; l < 4; l++)
-                {
-                    elements[i].Ce[k][l] += elementUniwersalny.funKsztaltu[j][k] * elementUniwersalny.funKsztaltu[j][l]
-                            * DENSITY * SPECIFIC_HEAT * elementUniwersalny.detJ[j];
-                }
-            }
-        }
-        std::cout << "Element " << i << "\n";
-        for(int j = 0; j < 4; j++)
-        {
-            for (int l = 0; l < 4; l++)
-            {
-                std::cout << elements[i].Ce[j][l] << "\t";
-            }
-            std::cout << "\n";
-        }
-        std::cout << "###########################################\n";
-    }
-}
-
 bool gauss(int n, double ** AB, double * X)
 {
 
@@ -443,7 +445,7 @@ bool Grid::iterate()
     for(int i = 0; i < numberOfNodes; i++)
         temp1[i] = 0.0;
 
-    double** H_P = new double*[numberOfNodes];
+    double** H_P = new double*[numberOfNodes];      // H_P - macierz H rozszerzona o wektor P, bo funkcja gauss tak wymaga
     for(int i = 0; i < numberOfNodes; i++)
     {
         H_P[i] = new double[numberOfNodes+1];
@@ -572,6 +574,7 @@ Grid::Grid(std::string fileName)
 
         calkowanieC();
         agregateH_C();
+        printGlobalH();
 
         calc_BC();
     }
@@ -585,7 +588,22 @@ void Grid::printData()
 
 void Grid::printGrid()
 {
-    std::cout << "Element ID| Node1| Node2| Node3| Node4| Boundaries 0/1/2/3|\n";
+    std::cout << "Node ID|    X    |    Y    |   temp   \n";
+    std::cout << "--------------------------------------\n";
+
+    std::cout << std::setprecision(4);
+
+    for(int i = 0; i < nodes.size(); i++)
+    {
+        std::cout << std::setw(7) << i << "|";
+        std::cout << std::setw(9) << nodes[i].getX() << "|";
+        std::cout << std::setw(9) << nodes[i].getY() << "|";
+        std::cout << std::setw(10) << nodes[i].temp << "|\n";
+    }
+
+    std::cout << "-----------------------------\n";
+
+    std::cout << "\nElement ID| Node1| Node2| Node3| Node4| Boundaries 0/1/2/3|\n";
     std::cout << "-----------------------------------------------------------\n";
 
     for(int i = 0; i < elements.size(); i++)
@@ -655,13 +673,14 @@ void Grid::printElemUniwersalny()
 
 void Grid::printGlobalH()
 {
-    std::cout << std::setprecision(6);
+    std::cout << std::fixed;
+    std::cout << std::setprecision(3);
     std::cout << "Global H matrix\n";
     for (int i = 0; i < numberOfNodes; i++)
     {
         for(int j = 0; j < numberOfNodes; j++)
         {
-            std::cout << Hg[i][j] << " ";
+            std::cout << std::setw(7) << Hg[i][j] << " ";
         }
         std::cout << "\n";
     }
@@ -670,13 +689,14 @@ void Grid::printGlobalH()
 
 void Grid::printGlobalC()
 {
-    std::cout << std::setprecision(6);
+    std::cout << std::fixed;
+    std::cout << std::setprecision(3);
     std::cout << "\nGlobal C matrix\n";
     for (int i = 0; i < numberOfNodes; i++)
     {
         for(int j = 0; j < numberOfNodes; j++)
         {
-            std::cout << Cg[i][j] << " ";
+            std::cout << std::setw(8) << Cg[i][j] << " ";
         }
         std::cout << "\n";
     }
@@ -720,14 +740,23 @@ void Grid::printP_Vector()
 
 void Grid::printTemperatures()
 {
-    std::cout << std::setprecision(6);
+    double min = AMBIENT_TEMP;
+    double max = 0.0;
+    std::cout << std::setprecision(4);
     std::cout << "\nTemperatures after " << currentTime << " seconds \n";
     for(int i = 0; i < numberOfNodes; i++)
     {
+        if(nodes[i].temp > max)
+            max = nodes[i].temp;
+        if(nodes[i].temp < min)
+            min = nodes[i].temp;
+
+
         std::cout << nodes[i].temp << "\t";
         if((i+1)%nH == 0)
             std::cout << "\n";
     }
+    std::cout << "Min temp: " << min << "\tMax temp: " << max << "\n";
     std::cout << "\n";
 }
 

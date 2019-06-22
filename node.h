@@ -7,7 +7,7 @@ class Node
     double x;
     double y;
 public:
-    double temp;
+    double temp;    //aktualna temperatura w węźle
     Node();
     Node(double _x, double _y, double _temp);
 

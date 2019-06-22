@@ -11,27 +11,37 @@
 struct ElementUniwersalny {
     //funKsztaltu[i][j] - i to punkt całkowania, j to numer funkcji kształtu w danym punkcie
     std::array<std::array<double, 4>, 4> funKsztaltu;
-    std::array<std::array<double, 4>, 4> pochodnepoKsi;
-    std::array<std::array<double, 4>, 4> pochodnepoEta;
+    std::array<std::array<double, 4>, 4> pochodnepoKsi; // pochodne funkcji kształtu(4)
+    std::array<std::array<double, 4>, 4> pochodnepoEta; // w każym punkcie całkowania(4)
     std::vector<double> detJ;
 };
 
-const double wspolrzedna = 1/sqrt(3);
+constexpr double wspolrzedna = 1/sqrt(3); // wartość wspolrzednej w 2pkt schemacie calkowania, ok. 0,577
 
 class Grid
 {
     ElementUniwersalny elementUniwersalny;
-    void setElementUniwersalny();
-    void setPochodnePoKsi();
-    void calkowanieH();
-    void calkowanieC();
-    void agregateH_C();
+    void setElementUniwersalny();           // obliczenie wartości funkcji kształtu w punktach calkowania
+                                            // oraz wartosci pochodnych
 
-    void calc_BC();
+    void calkowanieH();                     // całkowanie lokalnych macierzy H w każdym z węzłów
+                                            // wyliczamy pochodne x/ksi x/eta y/ksi y/eta detJ
+                                            // z tego obliczamy pochodne funkcji kształtu po x i y
 
-    void calc_H_Matrix();
+    void calkowanieC();                     // calkowanie lokalnych macierzy C w każdym węźle
+                                            // obliczane jest ze wzoru c*ro*{N}*{N}T*detJ
 
-    void calc_P_Vector();
+    void agregateH_C();                     // agregacja lokalnych macierzy H i C do ich globalnych
+                                            // odpowiednikow
+
+    void calc_BC();                         // wprowadzenie warunków brzegowych, obliczenie wektora P
+                                            // oraz dodanie wartosci z calkowania na brzegu do globalnej
+                                            // macierzy H
+                                            // każdy brzeg jest liczony oddzielnie
+
+    void calc_H_Matrix();                   // obliczenie macierzy H (z daszkiem, w danej iteracji)
+
+    void calc_P_Vector();                   // obliczenie wektora P (obciążeń)(też z daszkiem)
 
 
     std::vector<Element> elements;

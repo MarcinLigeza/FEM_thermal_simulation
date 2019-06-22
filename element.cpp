@@ -19,7 +19,7 @@ Element::Element(int id1, int id2, int id3, int id4)
    {
        for (int j = 0; j < 4; j++)
        {
-           He[i][j] = 0.0;
+           He[i][j] = 0.0;  //początkowe wyzerowanie macierzy
            Ce[i][j] = 0.0;
        }
    }
